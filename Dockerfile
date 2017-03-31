@@ -23,12 +23,19 @@ RUN wget --no-verbose https://s3.amazonaws.com/rstudio-shiny-server-os-build/ubu
     gdebi -n ss-latest.deb && \
     rm -f version.txt ss-latest.deb
 
-RUN R -e "install.packages(c('shiny', 'shinydashboard', 'shinythemes', 'shinyjs', 'Rcpp', 'rjson', 'devtools', 'psych', 'ggplot2', 'vegan', 'dendextend', 'circlize', 'googleVis', 'DT', 'RColorBrewer', 'ade4', 'scales', 'gplots', 'maps','animation', 'clusterGeneration', 'coda', 'combinat', 'msm', 'numDeriv',  'plotrix', 'scatterplot3d', 'quadprog', 'igraph', 'fastmatch'), repos='http://cran.univ-paris1.fr/'); source('http://bioconductor.org/biocLite.R'); biocLite(c('BiocInstaller', 'genefilter', 'DESeq2')); options(download.file.method = 'wget'); devtools::install_github(c('aghozlane/biomformat', 'aghozlane/rNVD3', 'timelyportfolio/d3vennR', 'aghozlane/d3heatmap', 'aghozlane/scatterD3', 'pierreLec/treeWeightD3', 'aghozlane/shinydashboard', 'aghozlane/ape', 'aghozlane/phangorn', 'aghozlane/phytools', 'aghozlane/GUniFrac'))"""
+RUN R -e "install.packages(c('shiny', 'shinydashboard', 'shinythemes', 'shinyjs', 'Rcpp', 'rjson', 'devtools', 'psych', 'ggplot2', 'vegan', 'dendextend', 'circlize', 'googleVis', 'DT', 'RColorBrewer', 'ade4', 'scales', 'gplots', 'maps','animation', 'clusterGeneration', 'coda', 'combinat', 'msm', 'numDeriv',  'plotrix', 'scatterplot3d', 'quadprog', 'igraph', 'fastmatch'), repos='http://cran.univ-paris1.fr/'); source('http://bioconductor.org/biocLite.R'); biocLite(c('BiocInstaller', 'genefilter', 'DESeq2')); options(download.file.method = 'wget'); devtools::install_github(c('aghozlane/biomformat', 'aghozlane/rNVD3', 'timelyportfolio/d3vennR', 'aghozlane/d3heatmap', 'aghozlane/scatterD3', 'pierreLec/treeWeightD3', 'aghozlane/shinydashboard', 'aghozlane/ape', 'aghozlane/phangorn', 'aghozlane/phytools', 'aghozlane/GUniFrac', 'pierreLec/PhyloTreeMetaR', 'pierreLec/KronaR'));devtools::install_github('HajkD/philentropy',build_vignettes = TRUE, dependencies = TRUE)"""
 
 COPY shiny-server.conf  /etc/shiny-server/shiny-server.conf
 
+RUN git clone https://github.com/pierreLec/KronaRShy /srv/shiny-server/kronarshy &&\
+    chown -R shiny.shiny  /srv/shiny-server/
+
 EXPOSE 80
 
+EXPOSE 5438
+
 COPY shiny-server.sh /usr/bin/shiny-server.sh
+
+COPY run_kronarshy.R /usr/bin/run_kronarshy.R
 
 CMD ["/usr/bin/shiny-server.sh"]
