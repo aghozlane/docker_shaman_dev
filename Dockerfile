@@ -46,6 +46,8 @@ RUN wget --no-verbose https://cran.r-project.org/src/base/R-3/R-3.6.1.tar.gz -P 
     wget ftp://shiny01.hosting.pasteur.fr/pub/shaman_package_${SOURCE_VERSION}.tar.gz -P /opt && \
     mkdir /opt/packman
 
+RUN R -e """install.packages('packrat', repos='${CRAN_SOURCE}');packrat::unbundle('/opt/shaman_package_${SOURCE_VERSION}.tar.gz', '/opt/packman')"""
+
 COPY shiny-server.conf  /etc/shiny-server/shiny-server.conf
 COPY .Rprofile  /srv/shiny-server/
 
