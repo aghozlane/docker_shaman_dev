@@ -1,0 +1,25 @@
+stages:
+  - build_conda
+  - build_dev
+  - build_master
+  
+
+services:
+  - registry-gitlab.pasteur.fr/dsi-tools/docker-images/docker:dind
+
+variables:
+  DOCKER_HOST: tcp://localhost:2375
+
+
+build_master:
+  image: registry-gitlab.pasteur.fr/dsi-tools/docker-images/docker:latest
+  stage: build_master
+  variables:
+    CI_DEBUG_TRACE: "false"
+  script:
+    - docker login -u "$DOCKER_USER" -p "$DOCKER_PASS"
+    # - docker pull aghozlane/shaman:latest || true
+    - docker build -t aghozlane/shaman_dev .
+    - docker push aghozlane/shaman_dev
+  only:
+    - master
