@@ -56,7 +56,7 @@ RUN git clone https://github.com/pierreLec/KronaRShy.git /srv/shiny-server/krona
     chown -R shiny.shiny  /srv/shiny-server/ && \
     cp /srv/shiny-server/.Rprofile /srv/shiny-server/kronarshy/.Rprofile
 
-EXPOSE 3838
+EXPOSE 80
 
 EXPOSE 5438
 
