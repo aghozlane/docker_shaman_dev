@@ -54,7 +54,10 @@ COPY .Rprofile  /srv/shiny-server/
 RUN git clone https://github.com/pierreLec/KronaRShy.git /srv/shiny-server/kronarshy && \
     git clone https://github.com/aghozlane/shaman_bioblend.git /usr/bin/shaman_bioblend && \
     chown -R shiny.shiny  /srv/shiny-server/ && \
-    cp /srv/shiny-server/.Rprofile /srv/shiny-server/kronarshy/.Rprofile
+    chown -R shiny.shiny  /opt/packman/ && \
+    rm /opt/shaman_package_${SOURCE_VERSION}.tar.gz && \
+    cp /srv/shiny-server/.Rprofile /srv/shiny-server/kronarshy/.Rprofile && \
+    chmod +x /usr/bin/shiny-server.sh
 
 EXPOSE 80
 
