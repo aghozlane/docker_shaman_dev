@@ -50,6 +50,8 @@ RUN R -e """install.packages('packrat', repos='${CRAN_SOURCE}');packrat::unbundl
 
 COPY shiny-server.conf  /etc/shiny-server/shiny-server.conf
 COPY .Rprofile  /srv/shiny-server/
+COPY shiny-server.sh /usr/bin/shiny-server.sh
+COPY run_kronarshy.R /usr/bin/run_kronarshy.R
 
 RUN git clone https://github.com/pierreLec/KronaRShy.git /srv/shiny-server/kronarshy && \
     git clone https://github.com/aghozlane/shaman_bioblend.git /usr/bin/shaman_bioblend && \
@@ -63,8 +65,6 @@ EXPOSE 80
 
 EXPOSE 5438
 
-COPY shiny-server.sh /usr/bin/shiny-server.sh
 
-COPY run_kronarshy.R /usr/bin/run_kronarshy.R
 
 CMD ["/usr/bin/shiny-server.sh"] 

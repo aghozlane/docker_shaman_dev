@@ -1,6 +1,4 @@
-stages:
-  - build_conda
-  - build_dev
+gitstages:
   - build_master
   
 
@@ -18,8 +16,8 @@ build_master:
     CI_DEBUG_TRACE: "false"
   script:
     - docker login -u "$DOCKER_USER" -p "$DOCKER_PASS"
-    # - docker pull aghozlane/shaman:latest || true
-    - docker build -t aghozlane/shaman_dev .
+    - docker pull aghozlane/shaman_dev:latest || true
+    - docker build --pull --cache-from aghozlane/shaman_dev:latest -t aghozlane/shaman_dev .
     - docker push aghozlane/shaman_dev
   only:
     - master
