@@ -1,7 +1,3 @@
-gitstages:
-  - build_master
-  
-
 services:
   - registry-gitlab.pasteur.fr/dsi-tools/docker-images/docker:dind
 
@@ -9,9 +5,9 @@ variables:
   DOCKER_HOST: tcp://localhost:2375
 
 
-build_master:
+docker:
   image: registry-gitlab.pasteur.fr/dsi-tools/docker-images/docker:latest
-  stage: build_master
+  stage: build
   variables:
     CI_DEBUG_TRACE: "false"
   script:
