@@ -1,19 +1,21 @@
-services:
-  - registry-gitlab.pasteur.fr/dsi-tools/docker-images/docker:dind
-
-variables:
-  DOCKER_HOST: tcp://localhost:2375
-
-
-docker:
-  image: registry-gitlab.pasteur.fr/dsi-tools/docker-images/docker:latest
+.build:
+  image: docker:24
   stage: build
+  before_script:
+    - i=0; while [ "$i" -lt 12 ]; do docker info && break; sleep 5; i=$(( i + 1 )) ; done
+    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+  script:
+    - docker pull $CI_REGISTRY_IMAGE/docs:latest || true
+    - docker build -t "$CI_REGISTRY_IMAGE/docs:$TAG" --build-arg="BUILD_OPTIONS=$OPTIONS" -f ./Dockerfile .
+    - docker push "$CI_REGISTRY_IMAGE/docs:$TAG"
+    - docker push "$CI_REGISTRY_IMAGE/docs:latest"
+
+build_master:
+  extends: .build
   variables:
-    CI_DEBUG_TRACE: "false"
+    TAG: $CI_COMMIT_SHORT_SHA
   script:
     - docker login -u "$DOCKER_USER" -p "$DOCKER_PASS"
-    - docker pull aghozlane/shaman_dev:latest || true
-    - docker build --pull --cache-from aghozlane/shaman_dev:latest -t aghozlane/shaman_dev .
     - docker push aghozlane/shaman_dev
   only:
     - master
